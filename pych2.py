@@ -1,4 +1,4 @@
-file = open('text.txt', 'r').read()
+file = open('pych2.txt', 'r').read()
 
 dic = {}
 
