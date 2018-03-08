@@ -8,14 +8,15 @@ class Snake:
     GRID_SIZE = int(CANVAS_SIZE / GRID_NUM)
     WINDOW_OFFSET = 400, 60
     TITLE = "SnakePy"
+    STARTING_POS = int(GRID_NUM / 2)
 
     def __init__(self, root=None):
         self.root = root
         self.root.geometry("+%d+%d" % self.WINDOW_OFFSET)
         self.root.title(self.TITLE)
 
-        self.head = (3, 3)
-        self.members = [(3, 4), (3, 5), (3, 6), (4, 6), (4, 7)]
+        self.head = (self.STARTING_POS, self.STARTING_POS)
+        self.members = [(self.STARTING_POS, self.STARTING_POS+1)]
         self.food = (-1, -1)
         self.direction = tk.N
 
@@ -79,9 +80,9 @@ class Snake:
         return newcoords
 
     def draw_snake(self):
-        self.draw_square(self.head, color="blue", customtag="snake")
         for member in self.members:
             self.draw_square(member, customtag="snake")
+        self.draw_square(self.head, color="blue", customtag="snake")
 
     def move_snake(self, event=None):
         newmembers = [self.head]
@@ -93,6 +94,9 @@ class Snake:
         if self.head == self.food:
             newmembers.append(self.members[-1])
             self.food = (-1, -1)
+            self.canvas.delete("food")
+            self.generate_food()
+
         self.members = newmembers
         self.canvas.delete('snake')
         self.draw_snake()
@@ -100,6 +104,7 @@ class Snake:
     def generate_food(self):
         randx = random.randint(0, self.GRID_NUM-1)
         randy = random.randint(0, self.GRID_NUM-1)
+
         allsnake = [self.head]
         for member in self.members:
             allsnake.append(member)
