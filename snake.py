@@ -149,13 +149,13 @@ class Snake:
         self.root.quit()
 
     def make_grid(self):
-        self.canvas.create_line(1, 1, 500, 1)
-        self.canvas.create_line(1, 1, 1, 500)
-        self.canvas.create_line(500, 1, 500, 500)
-        self.canvas.create_line(1, 500, 500, 500)
+        self.canvas.create_line(1, 1, self.CANVAS_SIZE, 1)
+        self.canvas.create_line(1, 1, 1, self.CANVAS_SIZE)
+        self.canvas.create_line(self.CANVAS_SIZE, 1, self.CANVAS_SIZE, self.CANVAS_SIZE)
+        self.canvas.create_line(1, self.CANVAS_SIZE, self.CANVAS_SIZE, self.CANVAS_SIZE)
         for i in range(0, self.CANVAS_SIZE, self.GRID_SIZE):
-            self.canvas.create_line(i,0, i, 500)
-            self.canvas.create_line(0,i, 500, i)
+            self.canvas.create_line(i,0, i, self.CANVAS_SIZE)
+            self.canvas.create_line(0,i, self.CANVAS_SIZE, i)
 
 
 def main():
