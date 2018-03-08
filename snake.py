@@ -45,7 +45,7 @@ class Snake:
         y1 = ycoord * self.GRID_SIZE
         x2 = x1 + self.GRID_SIZE
         y2 = y1 + self.GRID_SIZE
-        return (x1, y1, x2, y2)
+        return x1, y1, x2, y2
 
     def draw_square(self, coords, color="black", customtag="square"):
         (x1, y1, x2, y2) = self.convert_coords_to_box(coords)
@@ -154,8 +154,8 @@ class Snake:
         self.canvas.create_line(self.CANVAS_SIZE, 1, self.CANVAS_SIZE, self.CANVAS_SIZE)
         self.canvas.create_line(1, self.CANVAS_SIZE, self.CANVAS_SIZE, self.CANVAS_SIZE)
         for i in range(0, self.CANVAS_SIZE, self.GRID_SIZE):
-            self.canvas.create_line(i,0, i, self.CANVAS_SIZE)
-            self.canvas.create_line(0,i, self.CANVAS_SIZE, i)
+            self.canvas.create_line(i, 0, i, self.CANVAS_SIZE)
+            self.canvas.create_line(0, i, self.CANVAS_SIZE, i)
 
 
 def main():
