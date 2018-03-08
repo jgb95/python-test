@@ -1,18 +1,15 @@
 import tkinter as tk
 
-class Application(tk.Frame):
+
+class Application():
   def __init__(self, master=None):
-    super().__init__(self, master)
-    self.grid()
-    self.create_widgets()
+    self.root = master
 
-
-  def create_widgets(self):
-    self.gram = tk.Button(self, text='Gram', width=10, command=self.gramClick)
-    self.eighth = tk.Button(self, text='Eighth', width=10, command=self.eighthClick)
-    self.quarter = tk.Button(self, text='Quarter', width=10, command=self.quarterClick)
-    self.half = tk.Button(self, text='Half', width=10, command=self.halfClick)
-    self.oz = tk.Button(self, text='Ounce', width=10, command=self.ozClick)
+    self.gram = tk.Button(self.root, text='Gram', width=10, command=self.gramClick)
+    self.eighth = tk.Button(self.root, text='Eighth', width=10, command=self.eighthClick)
+    self.quarter = tk.Button(self.root, text='Quarter', width=10, command=self.quarterClick)
+    self.half = tk.Button(self.root, text='Half', width=10, command=self.halfClick)
+    self.oz = tk.Button(self.root, text='Ounce', width=10, command=self.ozClick)
 
 
 
@@ -39,7 +36,8 @@ class Application(tk.Frame):
 
 
 root = tk.Tk()
+root.geometry("200x200+50+60")
 
 app = Application(master=root)
 
-app.mainloop()
+root.mainloop()
