@@ -34,7 +34,10 @@ class Snake:
 
     def draw_square(self, coords, color="black"):
         (xcoord, ycoord) = coords
-        (x1, y1, x2, y2) = self.convert_coords(xcoord, ycoord)
+        x1 = xcoord * self.GRID_SIZE
+        y1 = ycoord * self.GRID_SIZE
+        x2 = x1 + self.GRID_SIZE
+        y2 = y1 + self.GRID_SIZE
         tag = str(xcoord) + "," + str(ycoord)
         self.canvas.create_rectangle(x1, y1, x2, y2, fill=color)
         self.canvas.addtag_enclosed(tag, x1-1, y1-1, x2+1, y2+1)
@@ -43,13 +46,6 @@ class Snake:
         (xcoord, ycoord) = coords
         tag = str(xcoord) + "," + str(ycoord)
         self.canvas.delete(tag)
-
-    def convert_coords(self, xcoord, ycoord):
-        x1 = xcoord * self.GRID_SIZE
-        y1 = ycoord * self.GRID_SIZE
-        x2 = x1 + self.GRID_SIZE
-        y2 = y1 + self.GRID_SIZE
-        return x1, y1, x2, y2
 
     def move(self, coords, direction):
         (xcoord, ycoord) = coords
