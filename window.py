@@ -11,8 +11,6 @@ class Application():
     self.half = tk.Button(self.root, text='Half', width=10, command=self.halfClick)
     self.oz = tk.Button(self.root, text='Ounce', width=10, command=self.ozClick)
 
-
-
     self.gram.grid(column=1,row=1)
     self.eighth.grid(column=1,row=2)
     self.quarter.grid(column=1,row=3)
