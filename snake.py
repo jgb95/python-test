@@ -1,4 +1,5 @@
 import tkinter as tk
+import random
 
 
 class Snake:
@@ -12,8 +13,10 @@ class Snake:
         self.root = root
         self.root.geometry("+%d+%d" % self.WINDOW_OFFSET)
         self.root.title(self.TITLE)
+
         self.head = (3, 3)
         self.members = [(3, 4), (3, 5), (3, 6), (4, 6), (4, 7)]
+        self.food = (-1, -1)
         self.direction = tk.N
 
         self.menubar = tk.Frame(root)
@@ -43,12 +46,12 @@ class Snake:
         y2 = y1 + self.GRID_SIZE
         return (x1, y1, x2, y2)
 
-    def draw_square(self, coords, color="black"):
+    def draw_square(self, coords, color="black", customtag="square"):
         (x1, y1, x2, y2) = self.convert_coords_to_box(coords)
         tag = self.tag(coords)
         self.canvas.create_rectangle(x1, y1, x2, y2, fill=color)
         self.canvas.addtag_enclosed(tag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
-        self.canvas.addtag_enclosed("square", x1 - 1, y1 - 1, x2 + 1, y2 + 1)
+        self.canvas.addtag_enclosed(customtag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
 
     def delete_square(self, coords):
         tag = self.tag(coords)
@@ -76,25 +79,37 @@ class Snake:
         return newcoords
 
     def draw_snake(self):
-        self.draw_square(self.head, color="blue")
+        self.draw_square(self.head, color="blue", customtag="snake")
         for member in self.members:
-            self.draw_square(member)
+            self.draw_square(member, customtag="snake")
 
     def move_snake(self, event=None):
         newmembers = [self.head]
         for member in self.members[:-1]:
             newmembers.append(member)
-        # tailtag = self.tag(self.members[-1])
-        # newtag = self.tag(self.head)
-        # (x1, y1, x2, y2) = self.convert_coords_to_box(self.head)
-        # self.canvas.coords(tailtag, x1, y1, x2, y2)
-        # self.canvas.dtag(tailtag, tailtag)
-        # self.canvas.addtag_enclosed(newtag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
 
-        self.members = newmembers
         self.head = self.move(self.head, self.direction)
-        self.canvas.delete('square')
+
+        if self.head == self.food:
+            newmembers.append(self.members[-1])
+            self.food = (-1, -1)
+        self.members = newmembers
+        self.canvas.delete('snake')
         self.draw_snake()
+
+    def generate_food(self):
+        randx = random.randint(0, self.GRID_NUM-1)
+        randy = random.randint(0, self.GRID_NUM-1)
+        allsnake = [self.head]
+        for member in self.members:
+            allsnake.append(member)
+        for member in allsnake:
+            if randx == member[0]:
+                randx += 1
+            if randy == member[1]:
+                randy += 1
+        self.food = (randx, randy)
+        self.draw_square(self.food, color="red", customtag="food")
 
     def tag(self, coords):
         tag = str(coords[0]) + "," + str(coords[1])
@@ -118,11 +133,10 @@ class Snake:
 
     def start(self):
         self.draw_snake()
-        # self.draw_square(self.head, color="red")
         print("start")
 
     def pause(self):
-        self.delete_square(self.head)
+        self.generate_food()
         print("pause")
 
     def quit(self):
