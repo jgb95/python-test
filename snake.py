@@ -3,13 +3,13 @@ import random
 
 
 class Snake(tk.Canvas):
-    CANVAS_SIZE = 500
-    GRID_NUM = 25
-    GRID_SIZE = int(CANVAS_SIZE / GRID_NUM)
-    STARTING_POS = int(GRID_NUM / 2)
-
-    def __init__(self, master=None):
+    def __init__(self, master=None, size=500, grid=25):
         self.root = master
+        self.CANVAS_SIZE = size
+        self.GRID_NUM = grid
+        self.GRID_SIZE = int(self.CANVAS_SIZE / self.GRID_NUM)
+        self.STARTING_POS = int(self.GRID_NUM / 2)
+
         super(Snake, self).__init__(self.root, width=self.CANVAS_SIZE, height=self.CANVAS_SIZE, bg="white")
         self.make_grid()
 
@@ -35,12 +35,12 @@ class Snake(tk.Canvas):
         y2 = y1 + self.GRID_SIZE
         return x1, y1, x2, y2
 
-    def draw_square(self, coords, color="black", customtag="square"):
+    def draw_box(self, coords, color="black", customtag="square"):
         (x1, y1, x2, y2) = self.convert_coords_to_box(coords)
         self.create_rectangle(x1, y1, x2, y2, fill=color)
         self.addtag_enclosed(customtag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
 
-    def move(self, coords, direction):
+    def move_box(self, coords, direction):
         (xcoord, ycoord) = coords
         newcoords = coords
 
@@ -56,16 +56,20 @@ class Snake(tk.Canvas):
         return newcoords
 
     def draw_snake(self):
+        print(" ")
+        print("*****")
+        print(self.head)
         for member in self.members:
-            self.draw_square(member, customtag="snake")
-        self.draw_square(self.head, color="blue", customtag="snake")
+            self.draw_box(member, customtag="snake")
+            print(member)
+        self.draw_box(self.head, color="blue", customtag="snake")
 
     def move_snake(self, event=None):
         newmembers = [self.head]
         for member in self.members[:-1]:
             newmembers.append(member)
 
-        self.head = self.move(self.head, self.direction)
+        self.head = self.move_box(self.head, self.direction)
 
         if self.head == self.food:
             newmembers.append(self.members[-1])
@@ -79,12 +83,12 @@ class Snake(tk.Canvas):
 
     def generate_food(self):
         allsnake = [self.head] + self.members
-
+        randx = 0
+        randy = 0
         isfound = False
         while not isfound:
             randx = random.randint(0, self.GRID_NUM - 1)
             randy = random.randint(0, self.GRID_NUM - 1)
-            print(str(randx) + ", " + str(randy))
             for member in allsnake:
                 if randx == member[0] and randy == member[1]:
                     isfound = False
@@ -93,18 +97,17 @@ class Snake(tk.Canvas):
                     isfound = True
 
         self.food = (randx, randy)
-        self.draw_square(self.food, color="red", customtag="food")
+        self.draw_box(self.food, color="red", customtag="food")
 
 
-class Application:
-    def __init__(self, master=None, title="Window Title", window_offset=(50, 50)):
+class Application(tk.Frame):
+    def __init__(self, master=None, size=500, grid=25):
         self.root = master
-        self.title = title
-        self.window_offset = window_offset
-        self.root.title(self.title)
-        self.root.geometry("+%d+%d" % self.window_offset)
+        self.size = size
+        self. grid = grid
+        super(Application, self).__init__(self.root)
 
-        self.menubar = tk.Frame(self.root)
+        self.menubar = tk.Frame(self)
         self.menubar.pack(side=tk.TOP, fill=tk.X)
         self.startbutton = tk.Button(self.menubar, text="Start", padx=2, pady=2, command=self.start)
         self.startbutton.pack(side=tk.LEFT, anchor=tk.W)
@@ -113,27 +116,35 @@ class Application:
         self.quitbutton = tk.Button(self.menubar, text="Quit", padx=2, pady=2, command=self.quit)
         self.quitbutton.pack(side=tk.LEFT, anchor=tk.W)
 
-        self.snake_canvas = Snake(self.root)
+        self.snake_canvas = Snake(self, size=self.size, grid=self.grid)
         self.snake_canvas.pack(side=tk.LEFT, anchor=tk.NW)
 
-        self.root.bind('w', self.hit_w)
-        self.root.bind('a', self.hit_a)
-        self.root.bind('s', self.hit_s)
-        self.root.bind('d', self.hit_d)
+        self.bind_keys()
+        self.pack()
 
-    def hit_w(self, event=None):
+    def bind_keys(self):
+        self.root.bind('w', self.press_up)
+        self.root.bind('a', self.press_left)
+        self.root.bind('s', self.press_down)
+        self.root.bind('d', self.press_right)
+        self.root.bind('<Up>', self.press_up)
+        self.root.bind('<Left>', self.press_left)
+        self.root.bind('<Down>', self.press_down)
+        self.root.bind('<Right>', self.press_right)
+
+    def press_up(self, event=None):
         self.snake_canvas.direction = tk.N
         self.snake_canvas.move_snake()
 
-    def hit_a(self, event=None):
-        self.snake_canvas.direction = tk.W
-        self.snake_canvas.move_snake()
-
-    def hit_s(self, event=None):
+    def press_down(self, event=None):
         self.snake_canvas.direction = tk.S
         self.snake_canvas.move_snake()
 
-    def hit_d(self, event=None):
+    def press_left(self, event=None):
+        self.snake_canvas.direction = tk.W
+        self.snake_canvas.move_snake()
+
+    def press_right(self, event=None):
         self.snake_canvas.direction = tk.E
         self.snake_canvas.move_snake()
 
@@ -145,17 +156,19 @@ class Application:
         self.snake_canvas.generate_food()
         print("pause")
 
-    def quit(self):
-        print("quit")
-        self.root.quit()
-
 
 def main():
     root = tk.Tk()
+    size = 500
+    num_grids = 25
 
-    Application(master=root, title="SnakePy", window_offset=(400, 60))
+    window_offset = (int((root.winfo_screenwidth() - size) / 2), int((root.winfo_screenheight() - size) / 2))
+    print(window_offset)
+    root.title("SnakePy")
+    root.geometry("+%d+%d" % window_offset)
 
-    root.mainloop()
+    app = Application(master=root, size=size, grid=num_grids)
+    app.mainloop()
 
 
 if __name__ == '__main__':
