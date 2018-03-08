@@ -13,7 +13,8 @@ class Snake:
         self.root.geometry("+%d+%d" % self.WINDOW_OFFSET)
         self.root.title(self.TITLE)
         self.head = (3, 3)
-        self.tail = []
+        self.members = [(3, 4), (3, 5), (3, 6), (4, 6), (4, 7)]
+        self.direction = tk.N
 
         self.menubar = tk.Frame(root)
         self.menubar.pack(side=tk.TOP, fill=tk.X)
@@ -32,6 +33,7 @@ class Snake:
         self.root.bind('a', self.hit_a)
         self.root.bind('s', self.hit_s)
         self.root.bind('d', self.hit_d)
+        self.root.bind('<space>', self.move_snake)
 
     def convert_coords_to_box(self, coords):
         (xcoord, ycoord) = coords
@@ -42,20 +44,19 @@ class Snake:
         return (x1, y1, x2, y2)
 
     def draw_square(self, coords, color="black"):
-        (xcoord, ycoord) = coords
         (x1, y1, x2, y2) = self.convert_coords_to_box(coords)
-        tag = str(xcoord) + "," + str(ycoord)
+        tag = self.tag(coords)
         self.canvas.create_rectangle(x1, y1, x2, y2, fill=color)
         self.canvas.addtag_enclosed(tag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
+        self.canvas.addtag_enclosed("square", x1 - 1, y1 - 1, x2 + 1, y2 + 1)
 
     def delete_square(self, coords):
-        (xcoord, ycoord) = coords
-        tag = str(xcoord) + "," + str(ycoord)
+        tag = self.tag(coords)
         self.canvas.delete(tag)
 
     def move(self, coords, direction):
         (xcoord, ycoord) = coords
-        tag = str(xcoord) + "," + str(ycoord)
+        tag = self.tag(coords)
         newcoords = coords
 
         if direction == tk.N:
@@ -67,34 +68,57 @@ class Snake:
         elif direction == tk.E:
             newcoords = ((xcoord + 1) % self.GRID_NUM, ycoord)
 
-        newtag = str(newcoords[0]) + "," + str(newcoords[1])
+        newtag = self.tag(newcoords)
         (x1, y1, x2, y2) = self.convert_coords_to_box(newcoords)
         self.canvas.coords(tag, x1, y1, x2, y2)
         self.canvas.dtag(tag, tag)
         self.canvas.addtag_enclosed(newtag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
+        return newcoords
+
+    def draw_snake(self):
+        self.draw_square(self.head, color="blue")
+        for member in self.members:
+            self.draw_square(member)
+
+    def move_snake(self, event=None):
+        newmembers = [self.head]
+        for member in self.members[:-1]:
+            newmembers.append(member)
+        # tailtag = self.tag(self.members[-1])
+        # newtag = self.tag(self.head)
+        # (x1, y1, x2, y2) = self.convert_coords_to_box(self.head)
+        # self.canvas.coords(tailtag, x1, y1, x2, y2)
+        # self.canvas.dtag(tailtag, tailtag)
+        # self.canvas.addtag_enclosed(newtag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
+
+        self.members = newmembers
+        self.head = self.move(self.head, self.direction)
+        self.canvas.delete('square')
+        self.draw_snake()
+
+    def tag(self, coords):
+        tag = str(coords[0]) + "," + str(coords[1])
+        return tag
 
     def hit_w(self, event=None):
-        self.move(self.head, tk.N)
-        (x, y) = self.head
-        self.head = (x, (y-1) % self.GRID_NUM)
+        self.direction = tk.N
+        self.move_snake()
 
     def hit_a(self, event=None):
-        self.move(self.head, tk.W)
-        (x, y) = self.head
-        self.head = ((x-1) % self.GRID_NUM, y)
+        self.direction = tk.W
+        self.move_snake()
 
     def hit_s(self, event=None):
-        self.move(self.head, tk.S)
-        (x, y) = self.head
-        self.head = (x, (y+1) % self.GRID_NUM)
+        self.direction = tk.S
+        self.move_snake()
 
     def hit_d(self, event=None):
-        self.move(self.head, tk.E)
-        (x, y) = self.head
-        self.head = ((x+1) % self.GRID_NUM, y)
+        self.direction = tk.E
+        self.move_snake()
 
     def start(self):
-        self.draw_square(self.head, color="red")
+        self.draw_snake()
+        # self.draw_square(self.head, color="red")
         print("start")
 
     def pause(self):
