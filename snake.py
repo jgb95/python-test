@@ -13,6 +13,7 @@ class Snake:
         self.root.geometry("+%d+%d" % self.WINDOW_OFFSET)
         self.root.title(self.TITLE)
         self.head = (3, 3)
+        self.tail = []
 
         self.menubar = tk.Frame(root)
         self.menubar.pack(side=tk.TOP, fill=tk.X)
@@ -32,15 +33,20 @@ class Snake:
         self.root.bind('s', self.hit_s)
         self.root.bind('d', self.hit_d)
 
-    def draw_square(self, coords, color="black"):
+    def convert_coords_to_box(self, coords):
         (xcoord, ycoord) = coords
         x1 = xcoord * self.GRID_SIZE
         y1 = ycoord * self.GRID_SIZE
         x2 = x1 + self.GRID_SIZE
         y2 = y1 + self.GRID_SIZE
+        return (x1, y1, x2, y2)
+
+    def draw_square(self, coords, color="black"):
+        (xcoord, ycoord) = coords
+        (x1, y1, x2, y2) = self.convert_coords_to_box(coords)
         tag = str(xcoord) + "," + str(ycoord)
         self.canvas.create_rectangle(x1, y1, x2, y2, fill=color)
-        self.canvas.addtag_enclosed(tag, x1-1, y1-1, x2+1, y2+1)
+        self.canvas.addtag_enclosed(tag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
 
     def delete_square(self, coords):
         (xcoord, ycoord) = coords
@@ -49,7 +55,9 @@ class Snake:
 
     def move(self, coords, direction):
         (xcoord, ycoord) = coords
+        tag = str(xcoord) + "," + str(ycoord)
         newcoords = coords
+
         if direction == tk.N:
             newcoords = (xcoord, (ycoord - 1) % self.GRID_NUM)
         elif direction == tk.W:
@@ -58,8 +66,12 @@ class Snake:
             newcoords = (xcoord, (ycoord + 1) % self.GRID_NUM)
         elif direction == tk.E:
             newcoords = ((xcoord + 1) % self.GRID_NUM, ycoord)
-        self.delete_square(coords)
-        self.draw_square(newcoords)
+
+        newtag = str(newcoords[0]) + "," + str(newcoords[1])
+        (x1, y1, x2, y2) = self.convert_coords_to_box(newcoords)
+        self.canvas.coords(tag, x1, y1, x2, y2)
+        self.canvas.dtag(tag, tag)
+        self.canvas.addtag_enclosed(newtag, x1 - 1, y1 - 1, x2 + 1, y2 + 1)
 
     def hit_w(self, event=None):
         self.move(self.head, tk.N)
@@ -80,7 +92,6 @@ class Snake:
         self.move(self.head, tk.E)
         (x, y) = self.head
         self.head = ((x+1) % self.GRID_NUM, y)
-
 
     def start(self):
         self.draw_square(self.head, color="red")
