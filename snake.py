@@ -78,17 +78,20 @@ class Snake(tk.Canvas):
         self.draw_snake()
 
     def generate_food(self):
-        randx = random.randint(0, self.GRID_NUM-1)
-        randy = random.randint(0, self.GRID_NUM-1)
+        allsnake = [self.head] + self.members
 
-        allsnake = [self.head]
-        for member in self.members:
-            allsnake.append(member)
-        for member in allsnake:
-            if randx == member[0]:
-                randx += 1
-            if randy == member[1]:
-                randy += 1
+        isfound = False
+        while not isfound:
+            randx = random.randint(0, self.GRID_NUM - 1)
+            randy = random.randint(0, self.GRID_NUM - 1)
+            print(str(randx) + ", " + str(randy))
+            for member in allsnake:
+                if randx == member[0] and randy == member[1]:
+                    isfound = False
+                    break
+                else:
+                    isfound = True
+
         self.food = (randx, randy)
         self.draw_square(self.food, color="red", customtag="food")
 
