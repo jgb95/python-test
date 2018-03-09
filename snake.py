@@ -45,13 +45,13 @@ class Snake(tk.Canvas):
         newcoords = coords
 
         if direction == tk.N:
-            newcoords = (xcoord, (ycoord - 1) % self.GRID_NUM)
+            newcoords = (xcoord, (ycoord - 1))
         elif direction == tk.W:
-            newcoords = ((xcoord - 1) % self.GRID_NUM, ycoord)
+            newcoords = ((xcoord - 1), ycoord)
         elif direction == tk.S:
-            newcoords = (xcoord, (ycoord + 1) % self.GRID_NUM)
+            newcoords = (xcoord, (ycoord + 1))
         elif direction == tk.E:
-            newcoords = ((xcoord + 1) % self.GRID_NUM, ycoord)
+            newcoords = ((xcoord + 1), ycoord)
 
         return newcoords
 
@@ -64,21 +64,32 @@ class Snake(tk.Canvas):
             print(member)
         self.draw_box(self.head, color="blue", customtag="snake")
 
-    def move_snake(self):
-        newmembers = [self.head]
-        for member in self.members[:-1]:
-            newmembers.append(member)
+    def move_snake(self, direction):
+        newhead = self.move_box(self.head, direction)
+        newmembers = []
 
-        self.head = self.move_box(self.head, self.direction)
-
-        if self.head == self.food:
-            newmembers.append(self.members[-1])
-            self.food = (-1, -1)
+        if newhead == self.food:
+            newmembers.append(self.head)
+            self.head = newhead
+            for member in self.members:
+                newmembers.append(member)
+            self.members = newmembers
             self.delete("food")
             self.generate_food()
+            self.direction = direction
+        elif newhead in [self.head] + self.members:
+            print("no")
+        elif newhead[0] < 0 or newhead[1] < 0 or newhead[0] >= self.GRID_NUM or newhead[1] >= self.GRID_NUM:
+            print("out")
+        else:
+            newmembers.append(self.head)
+            self.head = newhead
+            for member in self.members[:-1]:
+                newmembers.append(member)
+            self.members = newmembers
+            self.direction = direction
 
-        self.members = newmembers
-        self.delete('snake')
+        self.delete("snake")
         self.draw_snake()
 
     def generate_food(self):
@@ -104,7 +115,7 @@ class Application(tk.Frame):
     def __init__(self, master=None, size=500, grid=25):
         self.root = master
         self.size = size
-        self. grid = grid
+        self.grid = grid
         super(Application, self).__init__(self.root)
 
         self.menubar = tk.Frame(self)
@@ -134,23 +145,19 @@ class Application(tk.Frame):
 
     def press_up(self, event=None):
         if self.snake_canvas.direction != tk.S:
-            self.snake_canvas.direction = tk.N
-            self.snake_canvas.move_snake()
+            self.snake_canvas.move_snake(tk.N)
 
     def press_down(self, event=None):
         if self.snake_canvas.direction != tk.N:
-            self.snake_canvas.direction = tk.S
-            self.snake_canvas.move_snake()
+            self.snake_canvas.move_snake(tk.S)
 
     def press_left(self, event=None):
         if self.snake_canvas.direction != tk.E:
-            self.snake_canvas.direction = tk.W
-            self.snake_canvas.move_snake()
+            self.snake_canvas.move_snake(tk.W)
 
     def press_right(self, event=None):
         if self.snake_canvas.direction != tk.W:
-            self.snake_canvas.direction = tk.E
-            self.snake_canvas.move_snake()
+            self.snake_canvas.move_snake(tk.E)
 
     def start(self):
         self.snake_canvas.draw_snake()
