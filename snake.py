@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+from tkinter import messagebox
 
 
 class Snake(tk.Canvas):
@@ -78,9 +79,13 @@ class Snake(tk.Canvas):
             self.generate_food()
             self.direction = direction
         elif newhead in [self.head] + self.members:
+            messagebox.showinfo("Game Over!", "Game over! You ate yourself!")
             print("no")
+            self.root.quit()
         elif newhead[0] < 0 or newhead[1] < 0 or newhead[0] >= self.GRID_NUM or newhead[1] >= self.GRID_NUM:
+            messagebox.showinfo("Game Over!", "Game over! You ran into a wall!")
             print("out")
+            self.root.quit()
         else:
             newmembers.append(self.head)
             self.head = newhead
