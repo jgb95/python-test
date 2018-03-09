@@ -64,7 +64,7 @@ class Snake(tk.Canvas):
             print(member)
         self.draw_box(self.head, color="blue", customtag="snake")
 
-    def move_snake(self, event=None):
+    def move_snake(self):
         newmembers = [self.head]
         for member in self.members[:-1]:
             newmembers.append(member)
@@ -133,20 +133,24 @@ class Application(tk.Frame):
         self.root.bind('<Right>', self.press_right)
 
     def press_up(self, event=None):
-        self.snake_canvas.direction = tk.N
-        self.snake_canvas.move_snake()
+        if self.snake_canvas.direction != tk.S:
+            self.snake_canvas.direction = tk.N
+            self.snake_canvas.move_snake()
 
     def press_down(self, event=None):
-        self.snake_canvas.direction = tk.S
-        self.snake_canvas.move_snake()
+        if self.snake_canvas.direction != tk.N:
+            self.snake_canvas.direction = tk.S
+            self.snake_canvas.move_snake()
 
     def press_left(self, event=None):
-        self.snake_canvas.direction = tk.W
-        self.snake_canvas.move_snake()
+        if self.snake_canvas.direction != tk.E:
+            self.snake_canvas.direction = tk.W
+            self.snake_canvas.move_snake()
 
     def press_right(self, event=None):
-        self.snake_canvas.direction = tk.E
-        self.snake_canvas.move_snake()
+        if self.snake_canvas.direction != tk.W:
+            self.snake_canvas.direction = tk.E
+            self.snake_canvas.move_snake()
 
     def start(self):
         self.snake_canvas.draw_snake()
