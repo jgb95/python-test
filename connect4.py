@@ -72,10 +72,10 @@ class Connect4(Canvas):
         if playerwon:  # if won, ask if user wants to play again
             play_new_game = messagebox.askyesno("Winner!", playerwon + " player has won the game!"
                                                                        "\n\nWould you like to play again?")
-            if play_new_game:       # if yes
-                self.new_game()     # start a new game
-            else:                   # if no
-                exit()              # exit the program
+            if play_new_game:           # if yes
+                self.delete("circle")   # cleard board to start a new game
+            else:                       # if no
+                exit()                  # exit the program
 
     def calculate_win(self):
         for x in range(0, self.GRID_NUM):       # loop every x position
@@ -117,8 +117,9 @@ class Connect4(Canvas):
         return None
 
     def new_game(self):
-        self.delete("circle")
-        messagebox.showinfo("New Game", "New Game Started")
+        startnewgame = messagebox.askyesno("New Game", "Would you like to start a new game?")
+        if startnewgame:
+            self.delete("circle")
 
     def left_click(self, event=None):
         x = int(event.x / self.GRID_SIZE)
