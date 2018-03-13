@@ -76,7 +76,7 @@ class Connect4(tk.Canvas):
 
 
 class Application(tk.Frame):
-    def __init__(self, master=None, size=500, grid=25):
+    def __init__(self, master=None, size=490, grid=7):
         self.root = master
         self.size = size
         self.grid = grid
