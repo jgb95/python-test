@@ -20,10 +20,6 @@ class Snake(tk.Canvas):
         self.direction = tk.N
 
     def make_grid(self):
-        self.create_line(1, 1, self.CANVAS_SIZE, 1)
-        self.create_line(1, 1, 1, self.CANVAS_SIZE)
-        self.create_line(self.CANVAS_SIZE, 1, self.CANVAS_SIZE, self.CANVAS_SIZE)
-        self.create_line(1, self.CANVAS_SIZE, self.CANVAS_SIZE, self.CANVAS_SIZE)
         for i in range(0, self.CANVAS_SIZE, self.GRID_SIZE):
             self.create_line(i, 0, i, self.CANVAS_SIZE)
             self.create_line(0, i, self.CANVAS_SIZE, i)
