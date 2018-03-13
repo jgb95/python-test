@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 class Connect4(tk.Canvas):
     def __init__(self, master=None, size=490, grid=7):
         self.root = master
@@ -102,6 +103,7 @@ class Application(tk.Frame):
 
     def pause(self):
         print("pause")
+
 
 def main():
     root = tk.Tk()
