@@ -83,20 +83,36 @@ class Connect4(Canvas):
                 color = self.has_piece((x, y))  # get color of currently selected piece
                 if self.has_piece((x, y)):
                     # horizontal right
-                    if self.has_piece((x, y)) == self.has_piece((x+1, y)) == \
-                            self.has_piece((x+2, y)) == self.has_piece((x+3, y)):
+                    if self.has_piece((x, y)) == self.has_piece((x + 1, y)) == \
+                            self.has_piece((x + 2, y)) == self.has_piece((x + 3, y)):
+                        self.draw_circle((x, y), "Gold")
+                        self.draw_circle((x + 1, y), "Gold")
+                        self.draw_circle((x + 2, y), "Gold")
+                        self.draw_circle((x + 3, y), "Gold")
                         return color
                     # vertical down
-                    if self.has_piece((x, y)) == self.has_piece((x, y+1)) == \
-                            self.has_piece((x, y+2)) == self.has_piece((x, y+3)):
+                    if self.has_piece((x, y)) == self.has_piece((x, y + 1)) == \
+                            self.has_piece((x, y + 2)) == self.has_piece((x, y + 3)):
+                        self.draw_circle((x, y), "Gold")
+                        self.draw_circle((x, y + 1), "Gold")
+                        self.draw_circle((x, y + 2), "Gold")
+                        self.draw_circle((x, y + 3), "Gold")
                         return color
                     # diagonal \
-                    if self.has_piece((x, y)) == self.has_piece((x+1, y+1)) == \
-                            self.has_piece((x+2, y+2)) == self.has_piece((x+3, y+3)):
+                    if self.has_piece((x, y)) == self.has_piece((x + 1, y + 1)) == \
+                            self.has_piece((x + 2, y + 2)) == self.has_piece((x + 3, y + 3)):
+                        self.draw_circle((x, y), "Gold")
+                        self.draw_circle((x + 1, y + 1), "Gold")
+                        self.draw_circle((x + 2, y + 2), "Gold")
+                        self.draw_circle((x + 3, y + 3), "Gold")
                         return color
                     # diagonal /
-                    if self.has_piece((x, y)) == self.has_piece((x-1, y+1)) == \
-                            self.has_piece((x-2, y+2)) == self.has_piece((x-3, y+3)):
+                    if self.has_piece((x, y)) == self.has_piece((x - 1, y + 1)) == \
+                            self.has_piece((x - 2, y + 2)) == self.has_piece((x - 3, y + 3)):
+                        self.draw_circle((x, y), "Gold")
+                        self.draw_circle((x - 1, y + 1), "Gold")
+                        self.draw_circle((x - 2, y + 2), "Gold")
+                        self.draw_circle((x - 3, y + 3), "Gold")
                         return color
         return None
 
