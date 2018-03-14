@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from time import sleep
 
 
 class Connect4(Canvas):
@@ -65,6 +66,8 @@ class Connect4(Canvas):
             if self.has_piece((xcoord, ycoord + 1)):  # if a piece exists in the next y position, break the loop
                 break
             else:  # if the next y position is empty
+                sleep(0.02)
+                self.update()
                 self.delete_circle((xcoord, ycoord))        # delete old circle
                 ycoord += 1                                 # increment y position
                 self.draw_circle((xcoord, ycoord), color)   # draw new circle
