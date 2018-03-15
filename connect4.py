@@ -147,10 +147,20 @@ class Application(Frame):
         self.menubar.pack(side=TOP, fill=X)
         self.newgamebutton = Button(self.menubar, text="New Game", padx=2, pady=2, command=self.connect.new_game)
         self.newgamebutton.pack(side=LEFT, anchor=W)
+        self.helpbutton = Button(self.menubar, text="Help", padx=2, pady=2, command=self.help)
+        self.helpbutton.pack(side=LEFT, anchor=W)
         self.quitbutton = Button(self.menubar, text="Quit", padx=2, pady=2, command=exit)
         self.quitbutton.pack(side=LEFT, anchor=W)
 
         self.pack()
+
+    def help(self):
+        messagebox.showinfo("How to play", "Rules\n"
+                                           "---------\n"
+                                           "Two players take turns stacking red and blue pieces into columns.\n\n"
+                                           "Left click a column to drop a blue piece. Right click for a red one.\n\n"
+                                           "The first player to have four pieces "
+                                           "in a row in any direction wins the game.")
 
 
 def main():
