@@ -168,7 +168,7 @@ def main():
     size = 560
     num_grids = 7
 
-    window_offset = (int((root.winfo_screenwidth() - size) / 2), int((root.winfo_screenheight() - size) / 2))
+    window_offset = (int((root.winfo_screenwidth() - size) / 3), int((root.winfo_screenheight() - size) / 3))
 
     root.title("Connect Four")
     root.geometry("+%d+%d" % window_offset)
