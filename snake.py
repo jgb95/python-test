@@ -154,6 +154,7 @@ class Application(Frame):
 
         self.bind_keys()
         self.pack()
+        self.root.protocol("WM_DELETE_WINDOW", self.quit)
 
     def bind_keys(self):
         self.root.bind('w', self.press_up)
@@ -221,12 +222,15 @@ class Application(Frame):
 
     def quit(self):
         self.snake_canvas.running = False
-        answer = messagebox.askyesno("Really Quit?", "Are you sure you want to quit?")
-        if answer:
-            self.root.destroy()
-        else:
-            self.snake_canvas.running = True
-            self.snake_canvas.tick()
+        try:
+            answer = messagebox.askyesno("Really Quit?", "Are you sure you want to quit?")
+            if answer:
+                self.root.destroy()
+            else:
+                self.snake_canvas.running = True
+                self.snake_canvas.tick()
+        except Exception:
+            print("Application already closed")
 
 
 def main():
@@ -235,8 +239,7 @@ def main():
     num_grids = 25
 
     window_offset = (int((root.winfo_screenwidth() - size) / 2), int((root.winfo_screenheight() - size) / 2))
-    print(window_offset)
-    root.title("SnakePy")
+    root.title("SnekPy")
     root.geometry("+%d+%d" % window_offset)
 
     app = Application(master=root, size=size, grid=num_grids)
