@@ -3,7 +3,7 @@ from tkinter import messagebox
 import random
 
 
-class Snake(Canvas):
+class SnakeCanvas(Canvas):
     def __init__(self, master=None, size=500, grid=25):
         self.root = master
         self.CANVAS_SIZE = size
@@ -12,7 +12,7 @@ class Snake(Canvas):
         self.STARTING_POS = int(self.GRID_NUM / 2)
         self.dark = True
 
-        super(Snake, self).__init__(self.root, width=self.CANVAS_SIZE, height=self.CANVAS_SIZE, bg="black")
+        super(SnakeCanvas, self).__init__(self.root, width=self.CANVAS_SIZE, height=self.CANVAS_SIZE, bg="black")
 
         self.head = (self.STARTING_POS, self.STARTING_POS)
         self.members = [(self.STARTING_POS, self.STARTING_POS + 1)]
@@ -128,12 +128,12 @@ class Snake(Canvas):
         self.draw_box(self.food, color="red", customtag="food")
 
 
-class Application(Frame):
+class SnakeApplication(Frame):
     def __init__(self, master=None, size=500, grid=25):
         self.root = master
         self.size = size
         self.grid = grid
-        super(Application, self).__init__(self.root)
+        super(SnakeApplication, self).__init__(self.root)
 
         self.menubar = Menu(self.root, tearoff=0)
         self.root.config(menu=self.menubar)
@@ -146,10 +146,9 @@ class Application(Frame):
         self.diffbar.add_command(label="Normal", command=lambda: self.snake_canvas.change_speed(50))
         self.diffbar.add_command(label="Hard", command=lambda: self.snake_canvas.change_speed(35))
         self.menubar.add_command(label="Toggle Theme", command=self.toggle_theme)
-        self.menubar.add_separator()
         self.menubar.add_command(label="Quit", command=self.quit)
 
-        self.snake_canvas = Snake(self, size=self.size, grid=self.grid)
+        self.snake_canvas = SnakeCanvas(self, size=self.size, grid=self.grid)
         self.snake_canvas.pack(side=LEFT, anchor=NW)
 
         self.bind_keys()
@@ -246,11 +245,11 @@ def main():
     size = 500
     num_grids = 25
 
-    window_offset = (int((root.winfo_screenwidth() - size) / 2), int((root.winfo_screenheight() - size) / 2))
+    window_offset = (int((root.winfo_screenwidth() - size) / 3), int((root.winfo_screenheight() - size) / 3))
     root.title("SnekPy")
     root.geometry("+%d+%d" % window_offset)
 
-    app = Application(master=root, size=size, grid=num_grids)
+    app = SnakeApplication(master=root, size=size, grid=num_grids)
     app.mainloop()
 
 
