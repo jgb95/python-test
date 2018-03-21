@@ -10,9 +10,9 @@ class Snake(Canvas):
         self.GRID_NUM = grid
         self.GRID_SIZE = int(self.CANVAS_SIZE / self.GRID_NUM)
         self.STARTING_POS = int(self.GRID_NUM / 2)
+        self.dark = True
 
-        super(Snake, self).__init__(self.root, width=self.CANVAS_SIZE, height=self.CANVAS_SIZE, bg="white")
-        self.make_grid()
+        super(Snake, self).__init__(self.root, width=self.CANVAS_SIZE, height=self.CANVAS_SIZE, bg="black")
 
         self.head = (self.STARTING_POS, self.STARTING_POS)
         self.members = [(self.STARTING_POS, self.STARTING_POS + 1)]
@@ -21,18 +21,12 @@ class Snake(Canvas):
         self.speed = 50
         self.direction = N
 
-    def make_grid(self):
-        for i in range(0, self.CANVAS_SIZE, self.GRID_SIZE):
-            self.create_line(i, 0, i, self.CANVAS_SIZE)
-            self.create_line(0, i, self.CANVAS_SIZE, i)
-
     def reset(self):
         self.delete("square")
         self.head = (self.STARTING_POS, self.STARTING_POS)
         self.members = [(self.STARTING_POS, self.STARTING_POS + 1)]
         self.food = (-1, -1)
         self.running = False
-        self.speed = 50
         self.direction = N
 
     def convert_coords_to_box(self, coords):
@@ -69,7 +63,7 @@ class Snake(Canvas):
         print("*****")
         print(self.head)
         for member in self.members:
-            self.draw_box(member, customtag="snake")
+            self.draw_box(member, color="yellow", customtag="snake")
             print(member)
         self.draw_box(self.head, color="blue", customtag="snake")
 
@@ -141,17 +135,19 @@ class Application(Frame):
         self.grid = grid
         super(Application, self).__init__(self.root)
 
-        self.menubar = Frame(self)
-        self.menubar.pack(side=TOP, fill=X)
-        self.startbutton = Button(self.menubar, text="Start", padx=2, pady=2, command=self.start)
-        self.startbutton.pack(side=LEFT, anchor=W)
-        self.pausebutton = Button(self.menubar, text="Pause", padx=2, pady=2, command=self.pause)
-        self.pausebutton.pack(side=LEFT, anchor=W)
-        self.newgamebutton = Button(self.menubar, text="New Game", padx=2, pady=2, command=self.new_game)
-        self.newgamebutton.pack(side=LEFT, anchor=W)
-
-        self.quitbutton = Button(self.menubar, text="Quit", padx=2, pady=2, command=self.quit)
-        self.quitbutton.pack(side=RIGHT, anchor=E)
+        self.menubar = Menu(self.root, tearoff=0)
+        self.root.config(menu=self.menubar)
+        self.menubar.add_command(label="Start", command=self.start)
+        self.menubar.add_command(label="Pause", command=self.pause)
+        self.menubar.add_command(label="New Game", command=self.new_game)
+        self.diffbar = Menu(self.menubar, tearoff=0)
+        self.menubar.add_cascade(label="Difficulty...", menu=self.diffbar)
+        self.diffbar.add_command(label="Easy", command=lambda: self.snake_canvas.change_speed(65))
+        self.diffbar.add_command(label="Normal", command=lambda: self.snake_canvas.change_speed(50))
+        self.diffbar.add_command(label="Hard", command=lambda: self.snake_canvas.change_speed(35))
+        self.menubar.add_command(label="Toggle Theme", command=self.toggle_theme)
+        self.menubar.add_separator()
+        self.menubar.add_command(label="Quit", command=self.quit)
 
         self.snake_canvas = Snake(self, size=self.size, grid=self.grid)
         self.snake_canvas.pack(side=LEFT, anchor=NW)
@@ -214,6 +210,14 @@ class Application(Frame):
                                                     "\nPress Enter or click the Start button to begin")
         else:
             self.root.destroy()
+
+    def toggle_theme(self):
+        if self.snake_canvas.dark:
+            self.snake_canvas.config(bg="white")
+            self.snake_canvas.dark = False
+        else:
+            self.snake_canvas.config(bg="black")
+            self.snake_canvas.dark = True
 
     def quit(self):
         self.snake_canvas.running = False
