@@ -246,7 +246,7 @@ def main():
     num_grids = 25
 
     window_offset = (int((root.winfo_screenwidth() - size) / 3), int((root.winfo_screenheight() - size) / 3))
-    root.title("Snek")
+    root.title("SnekPy")
     root.geometry("+%d+%d" % window_offset)
 
     app = SnakeApplication(master=root, size=size, grid=num_grids)
