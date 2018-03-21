@@ -239,7 +239,7 @@ class SnakeApplication(Frame):
             except Exception:
                 print("Application already closed")
 
-
+#test
 def main():
     root = Tk()
     size = 500
