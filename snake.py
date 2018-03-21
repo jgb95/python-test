@@ -221,16 +221,24 @@ class Application(Frame):
             self.snake_canvas.dark = True
 
     def quit(self):
-        self.snake_canvas.running = False
-        try:
-            answer = messagebox.askyesno("Really Quit?", "Are you sure you want to quit?")
-            if answer:
-                self.root.destroy()
-            else:
-                self.snake_canvas.running = True
-                self.snake_canvas.tick()
-        except Exception:
-            print("Application already closed")
+        if self.snake_canvas.running:
+            self.snake_canvas.running = False
+            try:
+                answer = messagebox.askyesno("Really Quit?", "Are you sure you want to quit?")
+                if answer:
+                    self.root.destroy()
+                else:
+                    self.snake_canvas.running = True
+                    self.snake_canvas.tick()
+            except Exception:
+                print("Application already closed")
+        else:
+            try:
+                answer = messagebox.askyesno("Really Quit?", "Are you sure you want to quit?")
+                if answer:
+                    self.root.destroy()
+            except Exception:
+                print("Application already closed")
 
 
 def main():
